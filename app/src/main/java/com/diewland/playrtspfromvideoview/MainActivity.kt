@@ -8,12 +8,9 @@ import android.widget.VideoView
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var vvPreview: VideoView
-    lateinit var btnStart: Button
-    lateinit var btnStop: Button
-
-    // DO NOT SUPPORT USER/PASS IN URL --> rtsp://user:pass@url
-    private val rtspUrl = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mov"
+    private lateinit var vvPreview: VideoView
+    private lateinit var btnStart: Button
+    private lateinit var btnStop: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +21,8 @@ class MainActivity : AppCompatActivity() {
         btnStop = findViewById(R.id.btn_stop)
 
         btnStart.setOnClickListener {
-            vvPreview.setVideoURI(Uri.parse(rtspUrl));
-            // vvPreview.setVideoPath(rtspUrl)
+            vvPreview.setVideoURI(Uri.parse(Config.RTSP_URL));
+            //vvPreview.setVideoPath(Config.RTSP_URL)
             //vvPreview.setZOrderOnTop(false);
             vvPreview.requestFocus();
             //vvPreview.postInvalidateDelayed(0);
