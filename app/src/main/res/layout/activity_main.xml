@@ -13,23 +13,58 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_start"
+            android:id="@+id/btn_start_vv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Start" />
+            android:text="Start Video View" />
 
         <Button
-            android:id="@+id/btn_stop"
+            android:id="@+id/btn_stop_vv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Stop" />
+            android:text="Stop Video View" />
+
+        <Button
+            android:id="@+id/btn_start_mp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Start Media Player" />
+
+        <Button
+            android:id="@+id/btn_stop_mp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Stop Media Player" />
+
+        <Button
+            android:id="@+id/btn_capture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Capture" />
+
     </LinearLayout>
 
     <VideoView
         android:id="@+id/vv_preview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextureView
+        android:id="@+id/tv_preview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <ImageView
+        android:id="@+id/iv_preview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 </LinearLayout>
