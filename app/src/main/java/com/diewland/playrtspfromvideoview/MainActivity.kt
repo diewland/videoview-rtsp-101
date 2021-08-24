@@ -1,6 +1,5 @@
 package com.diewland.playrtspfromvideoview
 
-import android.graphics.SurfaceTexture
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
@@ -40,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         btnCapture = findViewById(R.id.btn_capture)
 
         // set MediaPlayer surface
+        /*
         textureView.surfaceTextureListener = object: TextureView.SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(texture: SurfaceTexture, width: Int, height: Int) {
                 surface = Surface(texture)
@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                 // pass
             }
         }
+        */
 
         // control VideoView
         btnStartVV.setOnClickListener {
@@ -72,13 +73,13 @@ class MainActivity : AppCompatActivity() {
         btnStartMP.setOnClickListener {
             mPlayer = MediaPlayer()
             mPlayer.setDataSource(Config.RTSP_URL)
-            mPlayer.setSurface(surface)
+            // mPlayer.setSurface(surface)
+            mPlayer.setSurface(Surface(textureView.surfaceTexture))
             mPlayer.prepare()
             mPlayer.start()
         }
         btnStopMP.setOnClickListener {
             mPlayer.stop()
-            mPlayer.release()
         }
 
         // capture
