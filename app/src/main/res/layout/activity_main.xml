@@ -17,14 +17,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Start Video View" />
+            android:text="Start Video View"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_stop_vv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Stop Video View" />
+            android:text="Stop Video View"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_start_mp"
@@ -45,7 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Capture" />
+            android:text="Capture"
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -53,7 +56,8 @@
         android:id="@+id/vv_preview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:visibility="gone" />
 
     <TextureView
         android:id="@+id/tv_preview"
