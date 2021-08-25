@@ -3,12 +3,17 @@ package com.diewland.playrtspfromvideoview
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
+
+const val TAG = "RTSP101"
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,8 +26,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnStopMP: Button
     private lateinit var btnCapture: Button
 
-    private lateinit var mPlayer: MediaPlayer
-    private lateinit var surface: Surface
+    private var mPlayer: MediaPlayer? = null
+    private var cloneHandler: Handler? = null
+    // private lateinit var surface: Surface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         btnStopMP = findViewById(R.id.btn_stop_mp)
         btnCapture = findViewById(R.id.btn_capture)
 
-        // set MediaPlayer surface
+        // get MediaPlayer surface
         /*
         textureView.surfaceTextureListener = object: TextureView.SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(texture: SurfaceTexture, width: Int, height: Int) {
@@ -71,20 +77,45 @@ class MainActivity : AppCompatActivity() {
 
         // control MediaPlayer
         btnStartMP.setOnClickListener {
-            mPlayer = MediaPlayer()
-            mPlayer.setDataSource(Config.RTSP_URL)
-            // mPlayer.setSurface(surface)
-            mPlayer.setSurface(Surface(textureView.surfaceTexture))
-            mPlayer.prepare()
-            mPlayer.start()
+            // start media player
+            mPlayer = MediaPlayer().apply {
+                setDataSource(Config.RTSP_URL)
+                // setSurface(surface)
+                setSurface(Surface(textureView.surfaceTexture))
+                prepare()
+                start()
+            }
+
+            // clone to imageview
+            cloneHandler = Handler(Looper.getMainLooper())
+            cloneHandler?.post(cloneVideoToImage)
         }
         btnStopMP.setOnClickListener {
-            mPlayer.stop()
+            // release media player
+            mPlayer?.release()
+            mPlayer = null
+
+            // release clone handler
+            cloneHandler?.removeCallbacksAndMessages(null)
+            cloneHandler = null
         }
 
         // capture
         btnCapture.setOnClickListener {
             imageView.setImageBitmap(textureView.bitmap)
+        }
+    }
+
+    // clone TextureView to ImageView
+    val fps = 1 // TODO
+    private val cloneVideoToImage = object: Runnable {
+        override fun run() {
+            Log.d(TAG, "clone TextureView to ImageView")
+            //
+            // TODO add face detection
+            //
+            imageView.setImageBitmap(textureView.bitmap)
+            cloneHandler?.postDelayed(this, 1_000) // TODO
         }
     }
 
