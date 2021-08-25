@@ -61,14 +61,12 @@
 
     <TextureView
         android:id="@+id/tv_preview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_width="640px"
+        android:layout_height="480px" />
 
     <ImageView
         android:id="@+id/iv_preview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_width="640px"
+        android:layout_height="480px" />
 
 </LinearLayout>
