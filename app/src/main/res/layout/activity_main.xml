@@ -13,56 +13,36 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_start_vv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Start Video View"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/btn_stop_vv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Stop Video View"
-            android:visibility="gone" />
-
-        <Button
             android:id="@+id/btn_start_mp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Start Media Player" />
+            android:text="Start Media Player"
+            android:textSize="34sp" />
 
         <Button
             android:id="@+id/btn_stop_mp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Stop Media Player" />
-
-        <Button
-            android:id="@+id/btn_capture"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Capture"
-            android:visibility="gone" />
+            android:text="Stop Media Player"
+            android:textSize="34sp" />
 
     </LinearLayout>
-
-    <VideoView
-        android:id="@+id/vv_preview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone" />
 
     <TextureView
         android:id="@+id/tv_preview"
         android:layout_width="640px"
         android:layout_height="480px" />
+
+    <TextView
+        android:id="@+id/tv_fps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="FPS: XXX"
+        android:textSize="34sp" />
 
     <ImageView
         android:id="@+id/iv_preview"
