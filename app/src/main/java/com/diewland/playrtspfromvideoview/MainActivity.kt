@@ -1,5 +1,8 @@
 package com.diewland.playrtspfromvideoview
 
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
@@ -12,6 +15,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.FaceDetection
+import com.google.mlkit.vision.face.FaceDetector
 
 const val TAG = "RTSP101"
 
@@ -30,6 +36,11 @@ class MainActivity : AppCompatActivity() {
     private var cloneHandler: Handler? = null
     // private lateinit var surface: Surface
 
+    // face detection
+    private val fps = 5
+    private lateinit var detector: FaceDetector
+    lateinit var p: Paint
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -43,6 +54,15 @@ class MainActivity : AppCompatActivity() {
         btnStartMP = findViewById(R.id.btn_start_mp)
         btnStopMP = findViewById(R.id.btn_stop_mp)
         btnCapture = findViewById(R.id.btn_capture)
+
+        // initial fact detector
+        detector = FaceDetection.getClient()
+
+        // define paint
+        p = Paint()
+        p.style = Paint.Style.STROKE
+        p.color = Color.YELLOW
+        p.strokeWidth = 5f
 
         // get MediaPlayer surface
         /*
@@ -107,14 +127,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     // clone TextureView to ImageView
-    val fps = 5
     private val cloneVideoToImage = object: Runnable {
         override fun run() {
             Log.d(TAG, "clone TextureView to ImageView")
-            //
-            // TODO add face detection
-            //
-            imageView.setImageBitmap(textureView.bitmap)
+
+            // face detection
+            textureView.bitmap?.apply {
+                val input = InputImage.fromBitmap(this, 0)
+                detector.process(input)
+                    .addOnSuccessListener {
+                        if (it.isNotEmpty()) {
+                            val canvas = Canvas(this)
+                            it.forEach { face ->
+                                // update frame color from box size
+                                p.color = when {
+                                    face.boundingBox.width() > 300 -> Color.GREEN
+                                    else -> Color.YELLOW
+                                }
+                                canvas.drawRect(face.boundingBox, p)
+                            }
+                        }
+                        imageView.setImageBitmap(this)
+                    }
+                    .addOnFailureListener {
+                        Log.e(TAG, it.stackTraceToString())
+                    }
+            }
+
+            // next frame
             cloneHandler?.postDelayed(this, 1_000L/fps)
         }
     }
