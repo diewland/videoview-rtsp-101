@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // clone TextureView to ImageView
-    val fps = 1 // TODO
+    val fps = 5
     private val cloneVideoToImage = object: Runnable {
         override fun run() {
             Log.d(TAG, "clone TextureView to ImageView")
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             // TODO add face detection
             //
             imageView.setImageBitmap(textureView.bitmap)
-            cloneHandler?.postDelayed(this, 1_000) // TODO
+            cloneHandler?.postDelayed(this, 1_000L/fps)
         }
     }
 
