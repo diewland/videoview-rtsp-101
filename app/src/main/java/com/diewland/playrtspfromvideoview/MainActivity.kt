@@ -97,6 +97,8 @@ class MainActivity : AppCompatActivity() {
 
         // control MediaPlayer
         btnStartMP.setOnClickListener {
+            if (mPlayer != null) return@setOnClickListener
+
             // start media player
             mPlayer = MediaPlayer().apply {
                 setDataSource(Config.RTSP_URL)
@@ -111,6 +113,8 @@ class MainActivity : AppCompatActivity() {
             cloneHandler?.post(cloneVideoToImage)
         }
         btnStopMP.setOnClickListener {
+            if (mPlayer == null) return@setOnClickListener
+
             // release media player
             mPlayer?.release()
             mPlayer = null
