@@ -12,7 +12,7 @@ import com.google.mlkit.vision.face.FaceDetection
 
 class IPCameraFace( private val rtspURL: String,
                     private val sourceView: TextureView,
-                    private val successCallback: (Bitmap, List<Face>, Int) -> Unit,
+                    private val successCallback: (Bitmap, List<Face>, Float) -> Unit,
                     private val failCallback: ((Exception) -> Unit)?=null,
                     private val fps: Int=5 ) {
 
@@ -50,13 +50,14 @@ class IPCameraFace( private val rtspURL: String,
 
     // detect face from source
     private val process = object: Runnable {
+        val f = fps.toFloat()
         override fun run() {
             // face detection callback
             sourceView.bitmap?.apply {
                 val input = InputImage.fromBitmap(this, 0)
                 detector.process(input)
                     .addOnSuccessListener {
-                        successCallback(this, it, fps)
+                        successCallback(this, it, f)
                     }
                     .addOnFailureListener {
                         failCallback?.invoke(it)
