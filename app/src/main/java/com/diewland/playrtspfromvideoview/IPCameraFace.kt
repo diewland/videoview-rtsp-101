@@ -24,17 +24,19 @@ class IPCameraFace( private val rtspURL: String,
     fun open() {
         if (mPlayer != null) return
 
-        // start media player
+        // setup media player
         mPlayer = MediaPlayer().apply {
             setDataSource(rtspURL)
             setSurface(Surface(sourceView.surfaceTexture))
-            prepare()
-            start()
+            setOnPreparedListener {
+                // start media player
+                start()
+                // start clone thread
+                handler = Handler(Looper.getMainLooper())
+                handler?.post(process)
+            }
+            prepareAsync()
         }
-
-        // start clone thread
-        handler = Handler(Looper.getMainLooper())
-        handler?.post(process)
     }
     fun close() {
         if (mPlayer == null) return
