@@ -14,15 +14,23 @@ class IPCameraFace( private val rtspURL: String,
                     private val sourceView: TextureView,
                     private val successCallback: (Bitmap, List<Face>, Float) -> Unit,
                     private val failCallback: ((Exception) -> Unit)?=null,
-                    private val fps: Int=5 ) {
+                    private val fps: Int=5,
+                    detectFaceDelay: Int=0) {
 
     // prepare engine
     private var mPlayer: MediaPlayer? = null
     private var handler: Handler? = null
     private var detector = FaceDetection.getClient()
 
+    // detect face delay
+    private var startTime: Long = 0
+    private var delayMs = detectFaceDelay * 1_000L
+
     fun open() {
         if (mPlayer != null) return
+
+        // update start time
+        startTime = System.currentTimeMillis()
 
         // setup media player
         mPlayer = MediaPlayer().apply {
@@ -56,14 +64,20 @@ class IPCameraFace( private val rtspURL: String,
         override fun run() {
             // face detection callback
             sourceView.bitmap?.apply {
-                val input = InputImage.fromBitmap(this, 0)
-                detector.process(input)
-                    .addOnSuccessListener {
-                        successCallback(this, it, f)
-                    }
-                    .addOnFailureListener {
-                        failCallback?.invoke(it)
-                    }
+                val detectFlag = (System.currentTimeMillis() - startTime) > delayMs
+                if (detectFlag) {
+                    val input = InputImage.fromBitmap(this, 0)
+                    detector.process(input)
+                        .addOnSuccessListener {
+                            successCallback(this, it, f)
+                        }
+                        .addOnFailureListener {
+                            failCallback?.invoke(it)
+                        }
+                }
+                else {
+                    successCallback(this, listOf(), f)
+                }
             }
             // next frame
             handler?.postDelayed(this, 1_000L/fps)
