@@ -26,7 +26,7 @@ class IPCameraFace( private val rtspURL: String,
     private var startTime: Long = 0
     private var delayMs = detectFaceDelay * 1_000L
 
-    fun open() {
+    fun open(url: String=rtspURL) {
         if (mPlayer != null) return
 
         // update start time
@@ -34,7 +34,7 @@ class IPCameraFace( private val rtspURL: String,
 
         // setup media player
         mPlayer = MediaPlayer().apply {
-            setDataSource(rtspURL)
+            setDataSource(url)
             setSurface(Surface(sourceView.surfaceTexture))
             setOnPreparedListener {
                 // start media player
