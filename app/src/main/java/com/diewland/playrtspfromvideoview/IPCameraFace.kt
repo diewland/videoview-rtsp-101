@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import com.google.mlkit.vision.common.InputImage
@@ -15,7 +16,8 @@ class IPCameraFace( private val rtspURL: String,
                     private val successCallback: (Bitmap, List<Face>, Float) -> Unit,
                     private val failCallback: ((Exception) -> Unit)?=null,
                     private val fps: Int=5,
-                    detectFaceDelay: Int=0) {
+                    detectFaceDelay: Int=0,
+                    queueWeight: Int=1) {
 
     // prepare engine
     private var mPlayer: MediaPlayer? = null
@@ -26,11 +28,18 @@ class IPCameraFace( private val rtspURL: String,
     private var startTime: Long = 0
     private var delayMs = detectFaceDelay * 1_000L
 
+    // prevent detect job overflow
+    private val qMax = queueWeight * fps
+    private var qSize = 0
+
     fun open(url: String=rtspURL) {
         if (mPlayer != null) return
 
         // update start time
         startTime = System.currentTimeMillis()
+
+        // empty queue
+        qSize = 0
 
         // setup media player
         mPlayer = MediaPlayer().apply {
@@ -66,10 +75,16 @@ class IPCameraFace( private val rtspURL: String,
             sourceView.bitmap?.apply {
                 val detectFlag = (System.currentTimeMillis() - startTime) > delayMs
                 if (detectFlag) {
+                    // when queue is full, skill frame
+                    // Log.d("IPCAMFACE", "$qSize vs $qMax")
+                    if (qSize >= qMax) return@apply
+                    qSize += 1
+
                     val input = InputImage.fromBitmap(this, 0)
                     detector.process(input)
                         .addOnSuccessListener {
                             successCallback(this, it, f)
+                            qSize -= 1
                         }
                         .addOnFailureListener {
                             failCallback?.invoke(it)
